@@ -13,18 +13,11 @@ A console-based library management program written in C++. It keeps records of b
 - Delete a book
 - All records saved to `books.txt` automatically
 
-## Concepts used
+![Program output](output.png)
 
-This project covers the core Programming Fundamentals syllabus:
+The program is built on the basics from the PF course: structs for book records, arrays to hold them, functions for each menu option, and file handling with `fstream` so the records survive between runs.
 
-- Variables, loops and conditional statements
-- Functions (one function per feature)
-- Structures (`struct Book`)
-- Arrays / vectors for storing records
-- File handling (`fstream`) for saving data
-- Menu-driven program flow with `switch`
-
-## How to run
+## Running it
 
 Compile with any C++ compiler, then run:
 
@@ -34,10 +27,6 @@ g++ -std=c++17 -o library main.cpp
 ```
 
 On Windows (MinGW / Dev-C++ / Code::Blocks), compile `main.cpp` and run the generated `.exe`. The program creates `books.txt` in the same folder on first use.
-
-## Output
-
-![Program output](output.png)
 
 ## Sample menu
 
