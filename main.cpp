@@ -14,70 +14,68 @@ struct Book {
 };
 
 Book books[100];
-int totalBooks = 0;
+int n = 0;
 
-void saveBooks() {
-    ofstream file("books.txt");
-    for (int i = 0; i < totalBooks; i++) {
-        file << books[i].id << endl;
-        file << books[i].title << endl;
-        file << books[i].author << endl;
-        file << books[i].issued << endl;
+void saveData() {
+    ofstream f("books.txt");
+    for (int i = 0; i < n; i++) {
+        f << books[i].id << endl;
+        f << books[i].title << endl;
+        f << books[i].author << endl;
+        f << books[i].issued << endl;
     }
-    file.close();
+    f.close();
 }
 
-void loadBooks() {
-    ifstream file("books.txt");
-    if (!file) return;
-    while (file >> books[totalBooks].id) {
-        file.ignore();
-        getline(file, books[totalBooks].title);
-        getline(file, books[totalBooks].author);
-        file >> books[totalBooks].issued;
-        totalBooks++;
+void loadData() {
+    ifstream f("books.txt");
+    if (!f) return;
+    while (f >> books[n].id) {
+        f.ignore();
+        getline(f, books[n].title);
+        getline(f, books[n].author);
+        f >> books[n].issued;
+        n++;
     }
-    file.close();
+    f.close();
 }
 
-int findBook(int id) {
-    for (int i = 0; i < totalBooks; i++) {
+int search(int id) {
+    for (int i = 0; i < n; i++) {
         if (books[i].id == id) return i;
     }
     return -1;
 }
 
 void addBook() {
-    if (totalBooks >= 100) {
+    if (n >= 100) {
         cout << "Library is full." << endl;
         return;
     }
-    Book b;
     cout << "Enter book ID: ";
-    cin >> b.id;
-    if (findBook(b.id) != -1) {
+    cin >> books[n].id;
+    if (search(books[n].id) != -1) {
         cout << "This ID already exists." << endl;
         return;
     }
     cin.ignore();
     cout << "Enter title: ";
-    getline(cin, b.title);
+    getline(cin, books[n].title);
     cout << "Enter author: ";
-    getline(cin, b.author);
-    b.issued = false;
-    books[totalBooks] = b;
-    totalBooks++;
-    saveBooks();
+    getline(cin, books[n].author);
+    books[n].issued = false;
+    n++;
+    saveData();
     cout << "Book added." << endl;
 }
 
 void showBooks() {
-    if (totalBooks == 0) {
+    if (n == 0) {
         cout << "No books yet." << endl;
         return;
     }
     cout << "\n--- All Books ---" << endl;
-    for (int i = 0; i < totalBooks; i++) {
+    for (int i = 0; i < n; i++) {
         cout << books[i].id << " | " << books[i].title << " by " << books[i].author;
         if (books[i].issued) cout << " | ISSUED" << endl;
         else cout << " | Available" << endl;
@@ -88,7 +86,7 @@ void searchBook() {
     int id;
     cout << "Enter book ID: ";
     cin >> id;
-    int i = findBook(id);
+    int i = search(id);
     if (i == -1) {
         cout << "Book not found." << endl;
     } else {
@@ -102,14 +100,14 @@ void issueBook() {
     int id;
     cout << "Enter book ID to issue: ";
     cin >> id;
-    int i = findBook(id);
+    int i = search(id);
     if (i == -1) {
         cout << "Book not found." << endl;
     } else if (books[i].issued) {
         cout << "This book is already issued." << endl;
     } else {
         books[i].issued = true;
-        saveBooks();
+        saveData();
         cout << "Book issued." << endl;
     }
 }
@@ -118,14 +116,14 @@ void returnBook() {
     int id;
     cout << "Enter book ID to return: ";
     cin >> id;
-    int i = findBook(id);
+    int i = search(id);
     if (i == -1) {
         cout << "Book not found." << endl;
     } else if (!books[i].issued) {
         cout << "This book was not issued." << endl;
     } else {
         books[i].issued = false;
-        saveBooks();
+        saveData();
         cout << "Book returned." << endl;
     }
 }
@@ -134,22 +132,22 @@ void deleteBook() {
     int id;
     cout << "Enter book ID to delete: ";
     cin >> id;
-    int i = findBook(id);
+    int i = search(id);
     if (i == -1) {
         cout << "Book not found." << endl;
         return;
     }
-    for (int j = i; j < totalBooks - 1; j++) {
+    for (int j = i; j < n - 1; j++) {
         books[j] = books[j + 1];
     }
-    totalBooks--;
-    saveBooks();
+    n--;
+    saveData();
     cout << "Book deleted." << endl;
 }
 
 int main() {
-    loadBooks();
-    int choice;
+    loadData();
+    int ch;
     do {
         cout << "\n===== Library Management System =====" << endl;
         cout << "1. Add Book" << endl;
@@ -160,13 +158,13 @@ int main() {
         cout << "6. Delete Book" << endl;
         cout << "0. Exit" << endl;
         cout << "Enter your choice: ";
-        if (!(cin >> choice)) {
+        if (!(cin >> ch)) {
             cin.clear();
             cin.ignore(1000, '\n');
-            choice = -1;
+            ch = -1;
         }
 
-        switch (choice) {
+        switch (ch) {
             case 1: addBook(); break;
             case 2: showBooks(); break;
             case 3: searchBook(); break;
@@ -176,7 +174,7 @@ int main() {
             case 0: cout << "Goodbye!" << endl; break;
             default: cout << "Invalid choice." << endl;
         }
-    } while (choice != 0);
+    } while (ch != 0);
 
     return 0;
 }
